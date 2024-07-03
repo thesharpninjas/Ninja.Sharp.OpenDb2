@@ -10,10 +10,10 @@
 	<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	<Company>The Sharp Ninjas</Company>
 	<Authors>The Sharp Ninjas</Authors>
-	<Version>1.0.0</Version>
-	<AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <InformationalVersion>1.0.0</InformationalVersion>
+	<Version>1.1.0</Version>
+	<AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <InformationalVersion>1.1.0</InformationalVersion>
     <RootNamespace>Ninja.Sharp.OpenDb2</RootNamespace>
 	<Description>Core package for OpenDb2</Description>
 	<PackageTags>DB2, OleDb, Sql</PackageTags>
