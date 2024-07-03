@@ -1,4 +1,7 @@
-﻿using OpenDb2.Enums;
+﻿// (c) 2024 thesharpninjas
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
+using OpenDb2.Enums;
 using System.Data;
 
 namespace OpenDb2.Interfaces.Windows

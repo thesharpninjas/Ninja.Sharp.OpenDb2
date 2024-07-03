@@ -1,4 +1,7 @@
-﻿using IBM.Data.Db2;
+﻿// (c) 2024 thesharpninjas
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
+using IBM.Data.Db2;
 using OpenDb2.Interfaces;
 using OpenDb2.Interfaces.Linux;
 using System.Data;

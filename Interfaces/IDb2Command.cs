@@ -1,4 +1,7 @@
-﻿using System.Data.Common;
+﻿// (c) 2024 thesharpninjas
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
+using System.Data.Common;
 
 namespace OpenDb2.Interfaces
 {

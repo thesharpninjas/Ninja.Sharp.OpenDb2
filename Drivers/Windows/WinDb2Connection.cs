@@ -1,4 +1,7 @@
-﻿using OpenDb2.Interfaces;
+﻿// (c) 2024 thesharpninjas
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
+using OpenDb2.Interfaces;
 using OpenDb2.Interfaces.Windows;
 using System.Data;
 using System.Data.OleDb;

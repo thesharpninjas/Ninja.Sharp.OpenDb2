@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿// (c) 2024 thesharpninjas
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenDb2.Drivers.Linux;
 using OpenDb2.Drivers.Windows;
