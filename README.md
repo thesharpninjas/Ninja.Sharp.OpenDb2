@@ -9,9 +9,18 @@ This .NET library provides an abstraction layer over DB2 database access methods
 | ------- | ------------ | 
 | [OpenDb2](https://www.nuget.org/packages/Ninja.Sharp.OpenDb2/) | [![OpenDb2](https://img.shields.io/badge/nuget-1.1.0-blue)](https://www.nuget.org/packages/OpenDb2/)
 
+## Generic Service registration
+
+You can register the OpenDB2 service simply with dependency injection:
+
+``` csharp
+builder.services
+   .AddDb2Services(connectionString, configuration);
+```
+
 ## Usage - On Windows
 
-Services registration:
+Windows Service registration:
 
 ``` csharp
 builder.services
@@ -105,7 +114,7 @@ public class Db2Repository(IWinDb2Connection connection)
 
 ## Usage - On Linux
 
-Services registration:
+Linux Service registration:
 
 ``` csharp
 builder.services
