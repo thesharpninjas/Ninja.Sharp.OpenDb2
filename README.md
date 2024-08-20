@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Nuget](https://img.shields.io/nuget/v/Ninja.Sharp.OpenDb2?style=plastic)](https://www.nuget.org/packages/Ninja.Sharp.OpenDb2)
+
 # Ninja.Sharp.OpenDb2
 
 This .NET library provides an abstraction layer over DB2 database access methods, facilitating dependency injection and enabling easier mocking and testing of database interactions.
