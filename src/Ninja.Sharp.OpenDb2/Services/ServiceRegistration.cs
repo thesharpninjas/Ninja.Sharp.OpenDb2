@@ -22,14 +22,17 @@ namespace OpenDb2.Services
         /// <param name="config"></param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        public static IServiceCollection AddDb2Services(this IServiceCollection services, string connectionString, IConfiguration config)
+        public static IServiceCollection AddDb2Services(
+            this IServiceCollection services, 
+            string connectionString, 
+            IConfiguration config)
         {
             ConfigurationBuilder builder = new();
 
             builder.AddConfiguration(config);
             builder.Build();
 
-            switch (EnvironmentDetector.GetCurrentOSPlatform())
+            switch (new EnvironmentDetector().GetCurrentOSPlatform())
             {
                 case var os when os == OSPlatform.Windows:
                     services.AddScoped<IWinDb2Connection>(sp => new WinDb2Connection(connectionString));

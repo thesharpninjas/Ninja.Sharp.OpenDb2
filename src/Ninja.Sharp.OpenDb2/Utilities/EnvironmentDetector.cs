@@ -1,13 +1,14 @@
 ﻿// (c) 2024 thesharpninjas
 // This code is licensed under MIT license (see LICENSE.txt for details)
 
+using Ninja.Sharp.OpenDb2.Interfaces;
 using System.Runtime.InteropServices;
 
 namespace Ninja.Sharp.OpenDb2.Utilities
 {
-    public class EnvironmentDetector
+    public class EnvironmentDetector : IEnvironmentDetector
     {
-        public static OSPlatform GetCurrentOSPlatform()
+        public OSPlatform GetCurrentOSPlatform()
         {
             return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? OSPlatform.Windows :
                    RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? OSPlatform.Linux :
@@ -15,12 +16,12 @@ namespace Ninja.Sharp.OpenDb2.Utilities
                    OSPlatform.Create("Other");
         }
 
-        public static bool IsWindows()
+        public bool IsWindows()
         {
             return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         }
 
-        public static bool IsLinux()
+        public bool IsLinux()
         {
             return RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
         }
