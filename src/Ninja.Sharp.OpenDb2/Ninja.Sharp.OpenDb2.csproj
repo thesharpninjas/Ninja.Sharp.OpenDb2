@@ -40,7 +40,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
-    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="8.0.0.300" />
+    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="9.0.0.100" />
     <PackageReference Include="System.Data.OleDb" Version="9.0.0" />
   </ItemGroup>
 
