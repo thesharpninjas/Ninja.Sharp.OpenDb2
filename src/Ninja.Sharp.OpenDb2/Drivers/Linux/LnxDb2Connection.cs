@@ -12,12 +12,16 @@ namespace OpenDb2.Drivers.Linux
     {
         private readonly DB2Connection _connection = new(connectionString);
 
+        /// <inheritdoc />
         public async Task Open() => await _connection.OpenAsync();
 
+        /// <inheritdoc />
         public async Task Close() => await _connection.CloseAsync();
 
+        /// <inheritdoc />
         public ILnxDb2Transaction BeginTransaction() => new LnxDb2Transaction(_connection.BeginTransaction());
 
+        /// <inheritdoc />
         public ILnxDb2Command CreateCommand(string commandText, CommandType commandType)
         {
             var command = _connection.CreateCommand();
@@ -28,6 +32,7 @@ namespace OpenDb2.Drivers.Linux
             return new LnxDb2Command(command);
         }
 
+        /// <inheritdoc />
         public ILnxDb2Command CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction)
         {
             var command = _connection.CreateCommand();

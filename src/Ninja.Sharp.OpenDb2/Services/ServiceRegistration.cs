@@ -40,6 +40,9 @@ namespace OpenDb2.Services
                 case var os when os == OSPlatform.Linux:
                     services.AddScoped<ILnxDb2Connection>(sp => new LnxDb2Connection(connectionString));
                     break;
+                case var os when os == OSPlatform.OSX:
+                    services.AddScoped<ILnxDb2Connection>(sp => new LnxDb2Connection(connectionString));
+                    break;
                 default:
                     throw new NotSupportedException("Unsupported operating system platform.");
             }

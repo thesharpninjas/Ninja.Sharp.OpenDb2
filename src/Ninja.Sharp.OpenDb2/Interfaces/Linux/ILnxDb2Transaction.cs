@@ -3,6 +3,9 @@
 
 namespace OpenDb2.Interfaces.Linux
 {
+    /// <summary>
+    /// Represents a transaction interface for interacting with a DB2 database on Linux systems.
+    /// </summary>
     public interface ILnxDb2Transaction : IDb2Transaction
     {
     }

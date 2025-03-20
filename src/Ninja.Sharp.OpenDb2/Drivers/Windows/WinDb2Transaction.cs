@@ -13,10 +13,13 @@ namespace OpenDb2.Drivers.Windows
 
         public IDbTransaction Transaction => _transaction;
 
+        /// <inheritdoc />
         public void Commit() => _transaction.Commit();
 
+        /// <inheritdoc />
         public void Rollback() => _transaction.Rollback();
 
+        /// <inheritdoc />
         public void Dispose() => _transaction.Dispose();
     }
 }

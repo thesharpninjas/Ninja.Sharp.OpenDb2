@@ -12,12 +12,16 @@ namespace OpenDb2.Drivers.Windows
     {
         private readonly OleDbConnection _connection = new(connectionString);
 
+        /// <inheritdoc />
         public async Task Open() => await _connection.OpenAsync();
 
+        /// <inheritdoc />
         public async Task Close() => await _connection.CloseAsync();
 
+        /// <inheritdoc />
         public IWinDb2Transaction BeginTransaction() => new WinDb2Transaction(_connection.BeginTransaction());
 
+        /// <inheritdoc />
         public IWinDb2Command CreateCommand(string commandText, CommandType commandType)
         {
             var command = _connection.CreateCommand();
@@ -28,6 +32,7 @@ namespace OpenDb2.Drivers.Windows
             return new WinDb2Command(command);
         }
 
+        /// <inheritdoc />
         public IWinDb2Command CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction)
         {
             var command = _connection.CreateCommand();

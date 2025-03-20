@@ -13,27 +13,35 @@ namespace OpenDb2.Drivers.Windows
     {
         private readonly OleDbCommand _command = command;
 
+        /// <inheritdoc />
         public void AddParam(string parameterName, object value) =>
-            _command.Parameters.Add(parameterName, value);
+            _command.Parameters.AddWithValue(parameterName, value);
 
+        /// <inheritdoc />
         public void AddParam(string parameterName, WinDb2Type type, object value) =>
             _command.Parameters.Add(parameterName, (OleDbType)type).Value = value;
 
+        /// <inheritdoc />
         public void AddParam(string parameterName, WinDb2Type type, int size, object value) =>
             _command.Parameters.Add(parameterName, (OleDbType)type, size).Value = value;
 
+        /// <inheritdoc />
         public void AddParam(string parameterName, WinDb2Type type, int size, ParameterDirection direction) =>
             _command.Parameters.Add(parameterName, (OleDbType)type, size).Direction = direction;
 
+        /// <inheritdoc />
         public object ReadParam(string parameterName) =>
             _command.Parameters[parameterName].Value;
 
         public Task<int> ExecuteNonQuery() => _command.ExecuteNonQueryAsync();
 
+        /// <inheritdoc />
         public Task<DbDataReader> ExecuteReader() => _command.ExecuteReaderAsync();
 
+        /// <inheritdoc />
         public DbDataAdapter CreateDataAdapter() => new OleDbDataAdapter(_command);
 
+        /// <inheritdoc />
         public void Dispose() => _command.Dispose();
     }
 }
