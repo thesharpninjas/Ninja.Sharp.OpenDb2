@@ -8,13 +8,6 @@
 
 This .NET library provides an abstraction layer over DB2 database access methods, facilitating dependency injection and enabling easier mocking and testing of database interactions.
 
-## Packages
---------
- 
-| Package | NuGet Stable | 
-| ------- | ------------ | 
-| [OpenDb2](https://www.nuget.org/packages/Ninja.Sharp.OpenDb2/) | [![OpenDb2](https://img.shields.io/badge/nuget-1.1.0-blue)](https://www.nuget.org/packages/OpenDb2/)
-
 ## Generic Service registration
 
 You can register the OpenDB2 service simply with dependency injection:
