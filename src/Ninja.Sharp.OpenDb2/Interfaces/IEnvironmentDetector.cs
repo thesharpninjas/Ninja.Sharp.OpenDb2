@@ -1,4 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿// (c) 2024 thesharpninjas
+// This code is licensed under MIT license (see LICENSE.txt for details)
+
+using System.Runtime.InteropServices;
 
 namespace Ninja.Sharp.OpenDb2.Interfaces
 {
