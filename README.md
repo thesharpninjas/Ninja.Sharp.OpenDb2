@@ -1,5 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nuget](https://img.shields.io/nuget/v/Ninja.Sharp.OpenDb2?style=plastic)](https://www.nuget.org/packages/Ninja.Sharp.OpenDb2)
+![NuGet Downloads](https://img.shields.io/nuget/dt/Ninja.Sharp.OpenDb2)
 [![issues - Ninja.Sharp.OpenDb2](https://img.shields.io/github/issues/thesharpninjas/Ninja.Sharp.OpenDb2)](https://github.com/thesharpninjas/Ninja.Sharp.OpenDb2/issues)
 [![stars - Ninja.Sharp.OpenDb2](https://img.shields.io/github/stars/thesharpninjas/Ninja.Sharp.OpenDb2?style=social)](https://github.com/thesharpninjas/Ninja.Sharp.OpenDb2)
 
