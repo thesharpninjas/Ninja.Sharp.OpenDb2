@@ -1,18 +1,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nuget](https://img.shields.io/nuget/v/Ninja.Sharp.OpenDb2?style=plastic)](https://www.nuget.org/packages/Ninja.Sharp.OpenDb2)
+![NuGet Downloads](https://img.shields.io/nuget/dt/Ninja.Sharp.OpenDb2)
 [![issues - Ninja.Sharp.OpenDb2](https://img.shields.io/github/issues/thesharpninjas/Ninja.Sharp.OpenDb2)](https://github.com/thesharpninjas/Ninja.Sharp.OpenDb2/issues)
 [![stars - Ninja.Sharp.OpenDb2](https://img.shields.io/github/stars/thesharpninjas/Ninja.Sharp.OpenDb2?style=social)](https://github.com/thesharpninjas/Ninja.Sharp.OpenDb2)
 
 # Ninja.Sharp.OpenDb2
 
 This .NET library provides an abstraction layer over DB2 database access methods, facilitating dependency injection and enabling easier mocking and testing of database interactions.
-
-## Packages
---------
- 
-| Package | NuGet Stable | 
-| ------- | ------------ | 
-| [OpenDb2](https://www.nuget.org/packages/Ninja.Sharp.OpenDb2/) | [![OpenDb2](https://img.shields.io/badge/nuget-1.1.0-blue)](https://www.nuget.org/packages/OpenDb2/)
 
 ## Generic Service registration
 
