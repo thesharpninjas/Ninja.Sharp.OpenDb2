@@ -1,4 +1,4 @@
-﻿// (c) 2024 thesharpninjas
+// (c) 2024 thesharpninjas
 // This code is licensed under MIT license (see LICENSE.txt for details)
 
 namespace OpenDb2.Enums
@@ -46,29 +46,29 @@ namespace OpenDb2.Enums
         DateTime = 38,
         Text = 39,
         Byte = 40,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         Char1 = 1001,
         SmallFloat = 1002,
         Null = 1003,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         IntervalYearMonth = 1004,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         IntervalDayFraction = 1005,
         NChar = 1006,
         NVarChar = 1007,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         Set = 1008,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         MultiSet = 1009,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         List = 1010,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         Row = 1011,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         SQLUDTVar = 1012,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         SQLUDTFixed = 1013,
-        [Obsolete("Current incompatabality between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
+        [Obsolete("Current incompatibility between the IBM Data Server Provider for .NET and the Client SDK IBM Informix .NET Provider")]
         SmartLobLocator = 1014,
         Boolean = 1015,
         Other = 1016

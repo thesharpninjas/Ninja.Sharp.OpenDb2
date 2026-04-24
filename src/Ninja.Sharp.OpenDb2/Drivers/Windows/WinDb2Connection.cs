@@ -8,22 +8,41 @@ using System.Data.OleDb;
 
 namespace OpenDb2.Drivers.Windows
 {
+    /// <summary>
+    /// Windows-specific DB2 connection implementation backed by <see cref="OleDbConnection"/>.
+    /// Registered as a scoped service via <c>AddWinDb2Services</c> or <c>AddDb2Services</c> on Windows.
+    /// </summary>
+    /// <param name="connectionString">The OleDb connection string used to connect to the DB2 instance.</param>
     public class WinDb2Connection(string connectionString) : IWinDb2Connection
     {
         private readonly OleDbConnection _connection = new(connectionString);
+        private bool _disposed;
 
         /// <inheritdoc />
-        public async Task Open() => await _connection.OpenAsync();
+        public async Task Open()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            await _connection.OpenAsync();
+        }
 
         /// <inheritdoc />
-        public async Task Close() => await _connection.CloseAsync();
+        public async Task Close()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            await _connection.CloseAsync();
+        }
 
         /// <inheritdoc />
-        public IWinDb2Transaction BeginTransaction() => new WinDb2Transaction(_connection.BeginTransaction());
+        public IWinDb2Transaction BeginTransaction()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            return new WinDb2Transaction(_connection.BeginTransaction());
+        }
 
         /// <inheritdoc />
         public IWinDb2Command CreateCommand(string commandText, CommandType commandType)
         {
+            ObjectDisposedException.ThrowIf(_disposed, this);
             var command = _connection.CreateCommand();
 
             command.CommandText = commandText;
@@ -35,15 +54,23 @@ namespace OpenDb2.Drivers.Windows
         /// <inheritdoc />
         public IWinDb2Command CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction)
         {
+            ObjectDisposedException.ThrowIf(_disposed, this);
             var command = _connection.CreateCommand();
 
             command.CommandText = commandText;
             command.CommandType = commandType;
-            command.Transaction = (OleDbTransaction)transaction.Transaction;
+            command.Transaction = transaction.Transaction as OleDbTransaction
+                ?? throw new InvalidOperationException($"Expected an OleDbTransaction but got {transaction.Transaction.GetType().Name}.");
 
             return new WinDb2Command(command);
         }
 
-        public void Dispose() => _connection.Dispose();
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+            _connection.Dispose();
+        }
     }
 }
