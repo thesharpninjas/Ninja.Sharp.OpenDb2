@@ -1,6 +1,8 @@
 ﻿// (c) 2024 thesharpninjas
 // This code is licensed under MIT license (see LICENSE.txt for details)
 
+using OpenDb2.Enums;
+using System.Data;
 using System.Data.Common;
 
 namespace OpenDb2.Interfaces
@@ -16,6 +18,33 @@ namespace OpenDb2.Interfaces
         /// <param name="parameterName">The name of the parameter to add.</param>
         /// <param name="value">The value of the parameter to add.</param>
         void AddParam(string parameterName, object value);
+
+        /// <summary>
+        /// Adds a parameter using a platform-agnostic <see cref="Db2Type"/> that is automatically
+        /// mapped to the correct platform-specific type at runtime.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to add.</param>
+        /// <param name="type">The platform-agnostic data type.</param>
+        /// <param name="value">The value of the parameter.</param>
+        void AddParam(string parameterName, Db2Type type, object value);
+
+        /// <summary>
+        /// Adds a parameter using a platform-agnostic <see cref="Db2Type"/> with a specified size.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to add.</param>
+        /// <param name="type">The platform-agnostic data type.</param>
+        /// <param name="size">The size of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        void AddParam(string parameterName, Db2Type type, int size, object value);
+
+        /// <summary>
+        /// Adds a parameter using a platform-agnostic <see cref="Db2Type"/> with a specified size and direction.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to add.</param>
+        /// <param name="type">The platform-agnostic data type.</param>
+        /// <param name="size">The size of the parameter.</param>
+        /// <param name="direction">The direction of the parameter.</param>
+        void AddParam(string parameterName, Db2Type type, int size, ParameterDirection direction);
 
         /// <summary>
         /// Retrieves the value of a parameter with the specified name.

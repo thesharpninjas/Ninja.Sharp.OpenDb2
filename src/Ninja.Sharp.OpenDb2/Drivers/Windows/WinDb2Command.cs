@@ -47,6 +47,24 @@ namespace OpenDb2.Drivers.Windows
         }
 
         /// <inheritdoc />
+        public void AddParam(string parameterName, Db2Type type, object value)
+        {
+            AddParam(parameterName, Db2TypeMapper.ToWindows(type), value);
+        }
+
+        /// <inheritdoc />
+        public void AddParam(string parameterName, Db2Type type, int size, object value)
+        {
+            AddParam(parameterName, Db2TypeMapper.ToWindows(type), size, value);
+        }
+
+        /// <inheritdoc />
+        public void AddParam(string parameterName, Db2Type type, int size, ParameterDirection direction)
+        {
+            AddParam(parameterName, Db2TypeMapper.ToWindows(type), size, direction);
+        }
+
+        /// <inheritdoc />
         public object ReadParam(string parameterName)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);

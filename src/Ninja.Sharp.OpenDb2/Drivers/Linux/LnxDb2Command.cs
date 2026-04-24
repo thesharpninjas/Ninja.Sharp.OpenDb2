@@ -47,6 +47,24 @@ namespace OpenDb2.Drivers.Linux
         }
 
         /// <inheritdoc />
+        public void AddParam(string parameterName, Db2Type type, object value)
+        {
+            AddParam(parameterName, Db2TypeMapper.ToLinux(type), value);
+        }
+
+        /// <inheritdoc />
+        public void AddParam(string parameterName, Db2Type type, int size, object value)
+        {
+            AddParam(parameterName, Db2TypeMapper.ToLinux(type), size, value);
+        }
+
+        /// <inheritdoc />
+        public void AddParam(string parameterName, Db2Type type, int size, ParameterDirection direction)
+        {
+            AddParam(parameterName, Db2TypeMapper.ToLinux(type), size, direction);
+        }
+
+        /// <inheritdoc />
         public object ReadParam(string parameterName)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
