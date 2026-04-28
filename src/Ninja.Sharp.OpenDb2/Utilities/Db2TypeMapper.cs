@@ -11,18 +11,6 @@ namespace OpenDb2.Enums
     /// </summary>
     public static class Db2TypeMapper
     {
-        static Db2TypeMapper()
-        {
-            var allValues = Enum.GetValues<Db2Type>();
-            foreach (var value in allValues)
-            {
-                if (!s_toWin.ContainsKey(value))
-                    throw new InvalidOperationException($"Db2Type '{value}' is missing a Windows (OleDb) mapping in {nameof(Db2TypeMapper)}.");
-                if (!s_toLnx.ContainsKey(value))
-                    throw new InvalidOperationException($"Db2Type '{value}' is missing a Linux (IBM.Data.Db2) mapping in {nameof(Db2TypeMapper)}.");
-            }
-        }
-
         private static readonly FrozenDictionary<Db2Type, WinDb2Type> s_toWin = new Dictionary<Db2Type, WinDb2Type>
         {
             [Db2Type.SmallInt] = WinDb2Type.SmallInt,
@@ -70,6 +58,18 @@ namespace OpenDb2.Enums
             [Db2Type.Xml] = LnxDb2Type.Xml,
             [Db2Type.Boolean] = LnxDb2Type.Boolean,
         }.ToFrozenDictionary();
+
+        static Db2TypeMapper()
+        {
+            var allValues = Enum.GetValues<Db2Type>();
+            foreach (var value in allValues)
+            {
+                if (!s_toWin.ContainsKey(value))
+                    throw new InvalidOperationException($"Db2Type '{value}' is missing a Windows (OleDb) mapping in {nameof(Db2TypeMapper)}.");
+                if (!s_toLnx.ContainsKey(value))
+                    throw new InvalidOperationException($"Db2Type '{value}' is missing a Linux (IBM.Data.Db2) mapping in {nameof(Db2TypeMapper)}.");
+            }
+        }
 
         /// <summary>
         /// Converts a <see cref="Db2Type"/> to the corresponding <see cref="WinDb2Type"/>.

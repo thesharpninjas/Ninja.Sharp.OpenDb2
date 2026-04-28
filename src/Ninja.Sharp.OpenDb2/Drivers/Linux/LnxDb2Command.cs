@@ -22,7 +22,8 @@ namespace OpenDb2.Drivers.Linux
         public void AddParam(string parameterName, object value)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            _command.Parameters.Add(parameterName, value ?? DBNull.Value);
+            var param = new DB2Parameter(parameterName, value ?? DBNull.Value);
+            _command.Parameters.Add(param);
         }
 
         /// <inheritdoc />

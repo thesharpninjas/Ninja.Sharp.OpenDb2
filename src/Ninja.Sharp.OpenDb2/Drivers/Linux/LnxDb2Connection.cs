@@ -70,6 +70,8 @@ namespace OpenDb2.Drivers.Linux
         {
             if (_disposed) return;
             _disposed = true;
+            if (_connection.State != ConnectionState.Closed)
+                _connection.Close();
             _connection.Dispose();
             GC.SuppressFinalize(this);
         }
