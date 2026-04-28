@@ -22,21 +22,21 @@ namespace OpenDb2.Drivers.Linux
         public void AddParam(string parameterName, object value)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            _command.Parameters.Add(parameterName, value);
+            _command.Parameters.Add(parameterName, value ?? DBNull.Value);
         }
 
         /// <inheritdoc />
         public void AddParam(string parameterName, LnxDb2Type type, object value)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            _command.Parameters.Add(parameterName, (DB2Type)type).Value = value;
+            _command.Parameters.Add(parameterName, (DB2Type)type).Value = value ?? DBNull.Value;
         }
 
         /// <inheritdoc />
         public void AddParam(string parameterName, LnxDb2Type type, int size, object value)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            _command.Parameters.Add(parameterName, (DB2Type)type, size).Value = value;
+            _command.Parameters.Add(parameterName, (DB2Type)type, size).Value = value ?? DBNull.Value;
         }
 
         /// <inheritdoc />
@@ -68,21 +68,26 @@ namespace OpenDb2.Drivers.Linux
         public object ReadParam(string parameterName)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
+            ArgumentException.ThrowIfNullOrWhiteSpace(parameterName);
+
+            if (!_command.Parameters.Contains(parameterName))
+                throw new ArgumentException($"Parameter '{parameterName}' not found.", nameof(parameterName));
+
             return _command.Parameters[parameterName].Value;
         }
 
         /// <inheritdoc />
-        public Task<int> ExecuteNonQuery()
+        public Task<int> ExecuteNonQuery(CancellationToken cancellationToken = default)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            return _command.ExecuteNonQueryAsync();
+            return _command.ExecuteNonQueryAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task<DbDataReader> ExecuteReader()
+        public Task<DbDataReader> ExecuteReader(CancellationToken cancellationToken = default)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            return _command.ExecuteReaderAsync();
+            return _command.ExecuteReaderAsync(cancellationToken);
         }
 
         /// <inheritdoc />
@@ -98,6 +103,7 @@ namespace OpenDb2.Drivers.Linux
             if (_disposed) return;
             _disposed = true;
             _command.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

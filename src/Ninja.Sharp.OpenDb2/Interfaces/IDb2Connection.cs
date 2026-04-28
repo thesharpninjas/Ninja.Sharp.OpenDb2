@@ -11,8 +11,9 @@ namespace OpenDb2.Interfaces
         /// <summary>
         /// Asynchronously opens the DB2 database connection.
         /// </summary>
+        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task Open();
+        Task Open(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asynchronously closes the DB2 database connection.

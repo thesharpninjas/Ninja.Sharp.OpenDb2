@@ -56,14 +56,16 @@ namespace OpenDb2.Interfaces
         /// <summary>
         /// Executes the command against the database and returns the number of rows affected.
         /// </summary>
+        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
         /// <returns>A task representing the asynchronous operation, with a result of the number of rows affected.</returns>
-        Task<int> ExecuteNonQuery();
+        Task<int> ExecuteNonQuery(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Executes the command against the database and returns a data reader for reading the results.
         /// </summary>
+        /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
         /// <returns>A task representing the asynchronous operation, with a result of a <see cref="DbDataReader"/> object for reading the results.</returns>
-        Task<DbDataReader> ExecuteReader();
+        Task<DbDataReader> ExecuteReader(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Creates a data adapter for use with the command.

@@ -1,7 +1,6 @@
 // (c) 2024 thesharpninjas
 // This code is licensed under MIT license (see LICENSE.txt for details)
 
-using Ninja.Sharp.OpenDb2.Interfaces;
 using System.Collections.Frozen;
 
 namespace OpenDb2.Enums
@@ -12,6 +11,18 @@ namespace OpenDb2.Enums
     /// </summary>
     public static class Db2TypeMapper
     {
+        static Db2TypeMapper()
+        {
+            var allValues = Enum.GetValues<Db2Type>();
+            foreach (var value in allValues)
+            {
+                if (!s_toWin.ContainsKey(value))
+                    throw new InvalidOperationException($"Db2Type '{value}' is missing a Windows (OleDb) mapping in {nameof(Db2TypeMapper)}.");
+                if (!s_toLnx.ContainsKey(value))
+                    throw new InvalidOperationException($"Db2Type '{value}' is missing a Linux (IBM.Data.Db2) mapping in {nameof(Db2TypeMapper)}.");
+            }
+        }
+
         private static readonly FrozenDictionary<Db2Type, WinDb2Type> s_toWin = new Dictionary<Db2Type, WinDb2Type>
         {
             [Db2Type.SmallInt] = WinDb2Type.SmallInt,
@@ -30,9 +41,9 @@ namespace OpenDb2.Enums
             [Db2Type.Date] = WinDb2Type.DBDate,
             [Db2Type.Time] = WinDb2Type.DBTime,
             [Db2Type.Timestamp] = WinDb2Type.DBTimeStamp,
-            [Db2Type.Clob] = WinDb2Type.LongVarWChar,
-            [Db2Type.Blob] = WinDb2Type.LongVarBinary,
-            [Db2Type.Xml] = WinDb2Type.LongVarWChar,
+            [Db2Type.Clob] = WinDb2Type.LongVarWChar,  // OleDb has no native CLOB; mapped to LongVarWChar (same as Xml)
+            [Db2Type.Blob] = WinDb2Type.LongVarBinary,  // OleDb has no native BLOB; mapped to LongVarBinary (same as LongVarBinary)
+            [Db2Type.Xml] = WinDb2Type.LongVarWChar,    // OleDb has no native XML; mapped to LongVarWChar (same as Clob)
             [Db2Type.Boolean] = WinDb2Type.Boolean,
         }.ToFrozenDictionary();
 

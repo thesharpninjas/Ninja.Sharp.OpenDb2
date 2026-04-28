@@ -19,10 +19,10 @@ namespace OpenDb2.Drivers.Windows
         private bool _disposed;
 
         /// <inheritdoc />
-        public async Task Open()
+        public async Task Open(CancellationToken cancellationToken = default)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            await _connection.OpenAsync();
+            await _connection.OpenAsync(cancellationToken);
         }
 
         /// <inheritdoc />
@@ -71,6 +71,7 @@ namespace OpenDb2.Drivers.Windows
             if (_disposed) return;
             _disposed = true;
             _connection.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
