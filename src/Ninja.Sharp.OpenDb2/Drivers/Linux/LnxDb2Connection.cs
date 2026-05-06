@@ -8,22 +8,41 @@ using System.Data;
 
 namespace OpenDb2.Drivers.Linux
 {
+    /// <summary>
+    /// Linux and macOS DB2 connection implementation backed by <see cref="DB2Connection"/> (IBM.Data.Db2).
+    /// Registered as a scoped service via <c>AddLnxDb2Services</c> or <c>AddDb2Services</c> on Linux/macOS.
+    /// </summary>
+    /// <param name="connectionString">The IBM DB2 connection string used to connect to the DB2 instance.</param>
     public class LnxDb2Connection(string connectionString) : ILnxDb2Connection
     {
         private readonly DB2Connection _connection = new(connectionString);
+        private bool _disposed;
 
         /// <inheritdoc />
-        public async Task Open() => await _connection.OpenAsync();
+        public async Task Open(CancellationToken cancellationToken = default)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            await _connection.OpenAsync(cancellationToken);
+        }
 
         /// <inheritdoc />
-        public async Task Close() => await _connection.CloseAsync();
+        public async Task Close()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            await _connection.CloseAsync();
+        }
 
         /// <inheritdoc />
-        public ILnxDb2Transaction BeginTransaction() => new LnxDb2Transaction(_connection.BeginTransaction());
+        public ILnxDb2Transaction BeginTransaction()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            return new LnxDb2Transaction(_connection.BeginTransaction());
+        }
 
         /// <inheritdoc />
         public ILnxDb2Command CreateCommand(string commandText, CommandType commandType)
         {
+            ObjectDisposedException.ThrowIf(_disposed, this);
             var command = _connection.CreateCommand();
 
             command.CommandText = commandText;
@@ -35,15 +54,35 @@ namespace OpenDb2.Drivers.Linux
         /// <inheritdoc />
         public ILnxDb2Command CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction)
         {
+            ObjectDisposedException.ThrowIf(_disposed, this);
             var command = _connection.CreateCommand();
 
             command.CommandText = commandText;
             command.CommandType = commandType;
-            command.Transaction = (DB2Transaction)transaction.Transaction;
+            command.Transaction = transaction.Transaction as DB2Transaction
+                ?? throw new InvalidOperationException($"Expected a DB2Transaction but got {transaction.Transaction.GetType().Name}.");
 
             return new LnxDb2Command(command);
         }
 
-        public void Dispose() => _connection.Dispose();
+        /// <inheritdoc />
+        IDb2Transaction IDb2Connection.BeginTransaction() => BeginTransaction();
+
+        /// <inheritdoc />
+        IDb2Command IDb2Connection.CreateCommand(string commandText, CommandType commandType) => CreateCommand(commandText, commandType);
+
+        /// <inheritdoc />
+        IDb2Command IDb2Connection.CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction) => CreateCommand(commandText, commandType, transaction);
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+            if (_connection.State != ConnectionState.Closed)
+                _connection.Close();
+            _connection.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

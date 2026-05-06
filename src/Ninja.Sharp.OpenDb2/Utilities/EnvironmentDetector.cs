@@ -6,8 +6,12 @@ using System.Runtime.InteropServices;
 
 namespace Ninja.Sharp.OpenDb2.Utilities
 {
+    /// <summary>
+    /// Default implementation of <see cref="IEnvironmentDetector"/> using <see cref="RuntimeInformation"/>.
+    /// </summary>
     public class EnvironmentDetector : IEnvironmentDetector
     {
+        /// <inheritdoc />
         public OSPlatform GetCurrentOSPlatform()
         {
             return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? OSPlatform.Windows :
@@ -16,11 +20,13 @@ namespace Ninja.Sharp.OpenDb2.Utilities
                    OSPlatform.Create("Other");
         }
 
+        /// <inheritdoc />
         public bool IsWindows()
         {
             return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         }
 
+        /// <inheritdoc />
         public bool IsLinux()
         {
             return RuntimeInformation.IsOSPlatform(OSPlatform.Linux);

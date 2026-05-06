@@ -7,19 +7,39 @@ using System.Data.OleDb;
 
 namespace OpenDb2.Drivers.Windows
 {
+    /// <summary>
+    /// Windows-specific DB2 transaction wrapper around <see cref="OleDbTransaction"/>.
+    /// </summary>
+    /// <param name="transaction">The underlying <see cref="OleDbTransaction"/>.</param>
     public class WinDb2Transaction(OleDbTransaction transaction) : IWinDb2Transaction
     {
         private readonly OleDbTransaction _transaction = transaction;
+        private bool _disposed;
 
+        /// <inheritdoc />
         public IDbTransaction Transaction => _transaction;
 
         /// <inheritdoc />
-        public void Commit() => _transaction.Commit();
+        public void Commit()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            _transaction.Commit();
+        }
 
         /// <inheritdoc />
-        public void Rollback() => _transaction.Rollback();
+        public void Rollback()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            _transaction.Rollback();
+        }
 
         /// <inheritdoc />
-        public void Dispose() => _transaction.Dispose();
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+            _transaction.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

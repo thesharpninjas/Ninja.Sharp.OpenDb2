@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Ninja.Sharp.OpenDb2.Interfaces;
 using Ninja.Sharp.OpenDb2.Tests.Attribute;
+using OpenDb2.Interfaces;
 using OpenDb2.Interfaces.Linux;
 using OpenDb2.Interfaces.Windows;
 using OpenDb2.Services;
@@ -25,7 +26,7 @@ namespace Ninja.Sharp.OpenDb2.Tests
             _configurationMock = new Mock<IConfiguration>();
         }
 
-        [WindowsOnlyFact]
+        [Fact]
         public void AddDb2Services_Should_Register_WinDb2Connection_On_Windows()
         {
             // Arrange
@@ -33,7 +34,7 @@ namespace Ninja.Sharp.OpenDb2.Tests
             environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Windows);
 
             // Act
-            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object);
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
 
             // Assert
             _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
@@ -41,7 +42,7 @@ namespace Ninja.Sharp.OpenDb2.Tests
                 sd.ImplementationFactory != null)), Times.Once);
         }
 
-        [LinuxOnlyFact]
+        [Fact]
         public void AddDb2Services_Should_Register_LnxDb2Connection_On_Linux()
         {
             // Arrange
@@ -49,12 +50,226 @@ namespace Ninja.Sharp.OpenDb2.Tests
             environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Linux);
 
             // Act
-            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object);
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
 
             // Assert
             _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
                 sd.ServiceType == typeof(ILnxDb2Connection) &&
                 sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Throw_ArgumentNullException_When_Services_Is_Null()
+        {
+            IServiceCollection? services = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+                services!.AddDb2Services(TestConnectionString, _configurationMock.Object));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void AddDb2Services_Should_Throw_ArgumentException_When_ConnectionString_Is_Invalid(string? connectionString)
+        {
+            Assert.ThrowsAny<ArgumentException>(() =>
+                _servicesMock.Object.AddDb2Services(connectionString!, _configurationMock.Object));
+        }
+
+        [Fact]
+        public void AddWinDb2Services_Should_Throw_ArgumentNullException_When_Services_Is_Null()
+        {
+            IServiceCollection? services = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+                services!.AddWinDb2Services(TestConnectionString, _configurationMock.Object));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void AddWinDb2Services_Should_Throw_ArgumentException_When_ConnectionString_Is_Invalid(string? connectionString)
+        {
+            Assert.ThrowsAny<ArgumentException>(() =>
+                _servicesMock.Object.AddWinDb2Services(connectionString!, _configurationMock.Object));
+        }
+
+        [WindowsOnlyFact]
+        public void AddWinDb2Services_Should_Register_WinDb2Connection()
+        {
+            // Act
+            _servicesMock.Object.AddWinDb2Services(TestConnectionString, _configurationMock.Object);
+
+            // Assert
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IWinDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [Fact]
+        public void AddLnxDb2Services_Should_Throw_ArgumentNullException_When_Services_Is_Null()
+        {
+            IServiceCollection? services = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+                services!.AddLnxDb2Services(TestConnectionString, _configurationMock.Object));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void AddLnxDb2Services_Should_Throw_ArgumentException_When_ConnectionString_Is_Invalid(string? connectionString)
+        {
+            Assert.ThrowsAny<ArgumentException>(() =>
+                _servicesMock.Object.AddLnxDb2Services(connectionString!, _configurationMock.Object));
+        }
+
+        [LinuxOnlyFact]
+        public void AddLnxDb2Services_Should_Register_LnxDb2Connection()
+        {
+            // Act
+            _servicesMock.Object.AddLnxDb2Services(TestConnectionString, _configurationMock.Object);
+
+            // Assert
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(ILnxDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Return_Same_ServiceCollection()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Windows);
+
+            var result = _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            Assert.Same(_servicesMock.Object, result);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Register_LnxDb2Connection_On_OSX()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.OSX);
+
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(ILnxDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Throw_NotSupportedException_On_Unknown_Platform()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Create("Other"));
+
+            Assert.Throws<NotSupportedException>(() =>
+                _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object));
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Throw_ArgumentNullException_When_EnvironmentDetector_Is_Null()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, null!));
+        }
+
+        [WindowsOnlyFact]
+        public void AddWinDb2Services_Should_Return_Same_ServiceCollection()
+        {
+            var result = _servicesMock.Object.AddWinDb2Services(TestConnectionString, _configurationMock.Object);
+
+            Assert.Same(_servicesMock.Object, result);
+        }
+
+        [LinuxOnlyFact]
+        public void AddLnxDb2Services_Should_Return_Same_ServiceCollection()
+        {
+            var result = _servicesMock.Object.AddLnxDb2Services(TestConnectionString, _configurationMock.Object);
+
+            Assert.Same(_servicesMock.Object, result);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Register_IDb2Connection_On_Windows()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Windows);
+
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Register_IDb2Connection_On_Linux()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Linux);
+
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Register_IDb2Connection_On_OSX()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.OSX);
+
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [WindowsOnlyFact]
+        public void AddWinDb2Services_Should_Register_IDb2Connection()
+        {
+            _servicesMock.Object.AddWinDb2Services(TestConnectionString, _configurationMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [LinuxOnlyFact]
+        public void AddLnxDb2Services_Should_Register_IDb2Connection()
+        {
+            _servicesMock.Object.AddLnxDb2Services(TestConnectionString, _configurationMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [WindowsOnlyFact]
+        public void WinDb2Connection_Should_Implement_IDb2Connection()
+        {
+            // Arrange
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Windows);
+
+            // Act
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            // Assert - both IWinDb2Connection and IDb2Connection are registered
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IWinDb2Connection))), Times.Once);
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection))), Times.Once);
         }
     }
 }
