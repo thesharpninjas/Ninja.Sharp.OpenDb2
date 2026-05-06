@@ -14,7 +14,7 @@ namespace OpenDb2.Interfaces.Windows
         /// Begins a new transaction on the DB2 connection.
         /// </summary>
         /// <returns>An instance of <see cref="IWinDb2Transaction"/> representing the new transaction.</returns>
-        IWinDb2Transaction BeginTransaction();
+        new IWinDb2Transaction BeginTransaction();
 
         /// <summary>
         /// Creates a new command to be executed against the DB2 database.
@@ -22,7 +22,7 @@ namespace OpenDb2.Interfaces.Windows
         /// <param name="commandText">The query or stored procedure to execute.</param>
         /// <param name="commandType">The type of command (e.g., Text, StoredProcedure).</param>
         /// <returns>An instance of <see cref="IWinDb2Command"/> representing the new command.</returns>
-        IWinDb2Command CreateCommand(string commandText, CommandType commandType);
+        new IWinDb2Command CreateCommand(string commandText, CommandType commandType);
 
         /// <summary>
         /// Creates a new command to be executed against the DB2 database within the context of a transaction.
@@ -31,6 +31,6 @@ namespace OpenDb2.Interfaces.Windows
         /// <param name="commandType">The type of command (e.g., Text, StoredProcedure).</param>
         /// <param name="transaction">The transaction within which the command should execute.</param>
         /// <returns>An instance of <see cref="IWinDb2Command"/> representing the new command.</returns>
-        IWinDb2Command CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction);
+        new IWinDb2Command CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction);
     }
 }

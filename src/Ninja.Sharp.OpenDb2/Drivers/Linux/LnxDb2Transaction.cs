@@ -39,6 +39,7 @@ namespace OpenDb2.Drivers.Linux
             if (_disposed) return;
             _disposed = true;
             _transaction.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

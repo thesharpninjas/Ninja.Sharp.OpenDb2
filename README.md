@@ -68,6 +68,64 @@ builder.Services
 
 All registration methods validate their arguments. Passing a `null` service collection throws `ArgumentNullException`; passing a `null`, empty, or whitespace connection string throws `ArgumentException`.
 
+## Cross-Platform Data Types
+
+The library provides a platform-agnostic `Db2Type` enum that is automatically mapped at runtime to the correct platform-specific type (`WinDb2Type` on Windows, `LnxDb2Type` on Linux/macOS). This allows you to write code that works on any OS without `#if` directives or platform checks.
+
+### Available types
+
+| Db2Type | Windows (OleDb) | Linux (IBM.Data.Db2) |
+|---|---|---|
+| `SmallInt` | `SmallInt` | `SmallInt` |
+| `Integer` | `Integer` | `Integer` |
+| `BigInt` | `BigInt` | `BigInt` |
+| `Real` | `Single` | `Real` |
+| `Double` | `Double` | `Double` |
+| `Decimal` | `Decimal` | `Decimal` |
+| `Numeric` | `Numeric` | `Numeric` |
+| `Char` | `Char` | `Char` |
+| `VarChar` | `VarChar` | `VarChar` |
+| `LongVarChar` | `LongVarChar` | `LongVarChar` |
+| `Binary` | `Binary` | `Binary` |
+| `VarBinary` | `VarBinary` | `VarBinary` |
+| `LongVarBinary` | `LongVarBinary` | `LongVarBinary` |
+| `Date` | `DBDate` | `Date` |
+| `Time` | `DBTime` | `Time` |
+| `Timestamp` | `DBTimeStamp` | `Timestamp` |
+| `Clob` | `LongVarWChar` | `Clob` |
+| `Blob` | `LongVarBinary` | `Blob` |
+| `Xml` | `LongVarWChar` | `Xml` |
+| `Boolean` | `Boolean` | `Boolean` |
+
+### Example: write-once, run-anywhere
+
+Use `AddDb2Services` for automatic platform detection and `Db2Type` for parameters — the same code deploys to Windows, Linux, and macOS without changes:
+
+``` csharp
+public class Db2Repository(IDb2Connection connection)
+{
+    public async Task DoSomething(string param1, int param2)
+    {
+        using (connection)
+        {
+            await connection.Open();
+
+            using var cmd = connection.CreateCommand("STORED_PROCEDURE_NAME", CommandType.StoredProcedure);
+
+            cmd.AddParam("@PARAM1", Db2Type.VarChar, 10, param1);
+            cmd.AddParam("@PARAM2", Db2Type.Decimal, 6, param2);
+            cmd.AddParam("@OUTPARAM", Db2Type.VarChar, 250, ParameterDirection.Output);
+
+            await cmd.ExecuteNonQuery();
+
+            string? outputResult = cmd.ReadParam("@OUTPARAM") as string;
+        }
+    }
+}
+```
+
+You can still use the platform-specific types (`WinDb2Type`, `LnxDb2Type`) directly when you need access to types that don't have a cross-platform equivalent.
+
 ## Usage on Windows
 
 Inject `IWinDb2Connection` into your repository or service class through constructor injection.
@@ -264,11 +322,11 @@ public class Db2Repository(ILnxDb2Connection connection)
 
 ## Supported Platforms
 
-| Operating System | Driver | Interface | Type Enum |
-|---|---|---|---|
-| Windows | System.Data.OleDb | `IWinDb2Connection` | `WinDb2Type` |
-| Linux | IBM.Data.Db2 | `ILnxDb2Connection` | `LnxDb2Type` |
-| macOS | IBM.Data.Db2 | `ILnxDb2Connection` | `LnxDb2Type` |
+| Operating System | Driver | Interface | Platform Type | Cross-Platform Type |
+|---|---|---|---|---|
+| Windows | System.Data.OleDb | `IWinDb2Connection` | `WinDb2Type` | `Db2Type` |
+| Linux | IBM.Data.Db2 | `ILnxDb2Connection` | `LnxDb2Type` | `Db2Type` |
+| macOS | IBM.Data.Db2 | `ILnxDb2Connection` | `LnxDb2Type` | `Db2Type` |
 
 ## Architecture Overview
 

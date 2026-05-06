@@ -19,10 +19,10 @@ namespace OpenDb2.Drivers.Windows
         private bool _disposed;
 
         /// <inheritdoc />
-        public async Task Open()
+        public async Task Open(CancellationToken cancellationToken = default)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            await _connection.OpenAsync();
+            await _connection.OpenAsync(cancellationToken);
         }
 
         /// <inheritdoc />
@@ -66,11 +66,23 @@ namespace OpenDb2.Drivers.Windows
         }
 
         /// <inheritdoc />
+        IDb2Transaction IDb2Connection.BeginTransaction() => BeginTransaction();
+
+        /// <inheritdoc />
+        IDb2Command IDb2Connection.CreateCommand(string commandText, CommandType commandType) => CreateCommand(commandText, commandType);
+
+        /// <inheritdoc />
+        IDb2Command IDb2Connection.CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction) => CreateCommand(commandText, commandType, transaction);
+
+        /// <inheritdoc />
         public void Dispose()
         {
             if (_disposed) return;
             _disposed = true;
+            if (_connection.State != ConnectionState.Closed)
+                _connection.Close();
             _connection.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
