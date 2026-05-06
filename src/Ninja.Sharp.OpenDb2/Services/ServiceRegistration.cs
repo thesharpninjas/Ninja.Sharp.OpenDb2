@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ninja.Sharp.OpenDb2.Interfaces;
 using Ninja.Sharp.OpenDb2.Utilities;
+using OpenDb2.Interfaces;
 using OpenDb2.Drivers.Linux;
 using OpenDb2.Drivers.Windows;
 using OpenDb2.Interfaces.Linux;
@@ -63,12 +64,15 @@ namespace OpenDb2.Services
             {
                 case var os when os == OSPlatform.Windows:
                     services.AddScoped<IWinDb2Connection>(sp => new WinDb2Connection(connectionString));
+                    services.AddScoped<IDb2Connection>(sp => sp.GetRequiredService<IWinDb2Connection>());
                     break;
                 case var os when os == OSPlatform.Linux:
                     services.AddScoped<ILnxDb2Connection>(sp => new LnxDb2Connection(connectionString));
+                    services.AddScoped<IDb2Connection>(sp => sp.GetRequiredService<ILnxDb2Connection>());
                     break;
                 case var os when os == OSPlatform.OSX:
                     services.AddScoped<ILnxDb2Connection>(sp => new LnxDb2Connection(connectionString));
+                    services.AddScoped<IDb2Connection>(sp => sp.GetRequiredService<ILnxDb2Connection>());
                     break;
                 default:
                     throw new NotSupportedException("Unsupported operating system platform.");
@@ -93,6 +97,7 @@ namespace OpenDb2.Services
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
             services.AddScoped<IWinDb2Connection>(sp => new WinDb2Connection(connectionString));
+            services.AddScoped<IDb2Connection>(sp => sp.GetRequiredService<IWinDb2Connection>());
 
             return services;
         }
@@ -113,6 +118,7 @@ namespace OpenDb2.Services
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
             services.AddScoped<ILnxDb2Connection>(sp => new LnxDb2Connection(connectionString));
+            services.AddScoped<IDb2Connection>(sp => sp.GetRequiredService<ILnxDb2Connection>());
 
             return services;
         }

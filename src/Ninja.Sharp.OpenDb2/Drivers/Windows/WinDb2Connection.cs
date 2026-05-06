@@ -66,6 +66,15 @@ namespace OpenDb2.Drivers.Windows
         }
 
         /// <inheritdoc />
+        IDb2Transaction IDb2Connection.BeginTransaction() => BeginTransaction();
+
+        /// <inheritdoc />
+        IDb2Command IDb2Connection.CreateCommand(string commandText, CommandType commandType) => CreateCommand(commandText, commandType);
+
+        /// <inheritdoc />
+        IDb2Command IDb2Connection.CreateCommand(string commandText, CommandType commandType, IDb2Transaction transaction) => CreateCommand(commandText, commandType, transaction);
+
+        /// <inheritdoc />
         public void Dispose()
         {
             if (_disposed) return;

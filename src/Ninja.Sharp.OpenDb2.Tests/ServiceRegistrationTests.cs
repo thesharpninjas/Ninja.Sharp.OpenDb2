@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Ninja.Sharp.OpenDb2.Interfaces;
 using Ninja.Sharp.OpenDb2.Tests.Attribute;
+using OpenDb2.Interfaces;
 using OpenDb2.Interfaces.Linux;
 using OpenDb2.Interfaces.Windows;
 using OpenDb2.Services;
@@ -193,6 +194,82 @@ namespace Ninja.Sharp.OpenDb2.Tests
             var result = _servicesMock.Object.AddLnxDb2Services(TestConnectionString, _configurationMock.Object);
 
             Assert.Same(_servicesMock.Object, result);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Register_IDb2Connection_On_Windows()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Windows);
+
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Register_IDb2Connection_On_Linux()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Linux);
+
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [Fact]
+        public void AddDb2Services_Should_Register_IDb2Connection_On_OSX()
+        {
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.OSX);
+
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [WindowsOnlyFact]
+        public void AddWinDb2Services_Should_Register_IDb2Connection()
+        {
+            _servicesMock.Object.AddWinDb2Services(TestConnectionString, _configurationMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [LinuxOnlyFact]
+        public void AddLnxDb2Services_Should_Register_IDb2Connection()
+        {
+            _servicesMock.Object.AddLnxDb2Services(TestConnectionString, _configurationMock.Object);
+
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection) &&
+                sd.ImplementationFactory != null)), Times.Once);
+        }
+
+        [WindowsOnlyFact]
+        public void WinDb2Connection_Should_Implement_IDb2Connection()
+        {
+            // Arrange
+            var environmentDetectorMock = new Mock<IEnvironmentDetector>();
+            environmentDetectorMock.Setup(e => e.GetCurrentOSPlatform()).Returns(OSPlatform.Windows);
+
+            // Act
+            _servicesMock.Object.AddDb2Services(TestConnectionString, _configurationMock.Object, environmentDetectorMock.Object);
+
+            // Assert - both IWinDb2Connection and IDb2Connection are registered
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IWinDb2Connection))), Times.Once);
+            _servicesMock.Verify(s => s.Add(It.Is<ServiceDescriptor>(sd =>
+                sd.ServiceType == typeof(IDb2Connection))), Times.Once);
         }
     }
 }
